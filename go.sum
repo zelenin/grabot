@@ -1,0 +1,4 @@
+github.com/fatih/structs v0.0.0-20180123065059-ebf56d35bba7 h1:bGT+Ub6bpzHl7AAYQhBrZ5nYTAH2SF/848WducU0Ao4=
+github.com/fatih/structs v0.0.0-20180123065059-ebf56d35bba7/go.mod h1:9NiDSp5zOcgEDl+j00MP/WkGVPOlPRLejGD8Ga6PJ7M=
+github.com/mxmCherry/multipartbuilder v1.0.0 h1:+Ygz73lOjD1fZYK+iYLYLkZtPyRJ3k5BxYmyYLbS7uE=
+github.com/mxmCherry/multipartbuilder v1.0.0/go.mod h1:dedlXVbjZZwBVKpGtcymgRIxljt3nNDYzGzReLsGYPk=
