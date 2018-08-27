@@ -338,7 +338,7 @@ type Voice struct {
 type VideoNote struct {
     // Unique identifier for this file
     FileId string `json:"file_id"`
-    // Video width and height as defined by sender
+    // Video width and height (diameter of the video message) as defined by sender
     Length int64 `json:"length"`
     // Duration of the video in seconds as defined by sender
     Duration int64 `json:"duration"`
@@ -611,9 +611,9 @@ type InputMediaAudio struct {
     // Duration of the audio in seconds
     Duration *int64 `json:"duration,omitempty"`
     // Performer of the audio
-    Performer *int64 `json:"performer,omitempty"`
+    Performer *string `json:"performer,omitempty"`
     // Title of the audio
-    Title *int64 `json:"title,omitempty"`
+    Title *string `json:"title,omitempty"`
 }
 
 // Represents a general file to be sent.
@@ -1456,7 +1456,7 @@ type PassportFile struct {
 type EncryptedPassportElement struct {
     // Element type. One of “personal_details”, “passport”, “driver_license”, “identity_card”, “internal_passport”, “address”, “utility_bill”, “bank_statement”, “rental_agreement”, “passport_registration”, “temporary_registration”, “phone_number”, “email”.
     Type string `json:"type"`
-    // Base64-encoded encrypted Telegram Passport element data provided by the user, available for “personal_details”, “passport”, “driver_license”, “identity_card”, “identity_passport” and “address” types. Can be decrypted and verified using the accompanying EncryptedCredentials.
+    // Base64-encoded encrypted Telegram Passport element data provided by the user, available for “personal_details”, “passport”, “driver_license”, “identity_card”, “internal_passport” and “address” types. Can be decrypted and verified using the accompanying EncryptedCredentials
     Data *string `json:"data,omitempty"`
     // User's verified phone number, available only for “phone_number” type
     PhoneNumber *string `json:"phone_number,omitempty"`
@@ -1470,6 +1470,10 @@ type EncryptedPassportElement struct {
     ReverseSide *PassportFile `json:"reverse_side,omitempty"`
     // Encrypted file with the selfie of the user holding a document, provided by the user; available for “passport”, “driver_license”, “identity_card” and “internal_passport”. The file can be decrypted and verified using the accompanying EncryptedCredentials.
     Selfie *PassportFile `json:"selfie,omitempty"`
+    // Array of encrypted files with translated versions of documents provided by the user. Available if requested for “passport”, “driver_license”, “identity_card”, “internal_passport”, “utility_bill”, “bank_statement”, “rental_agreement”, “passport_registration” and “temporary_registration” types. Files can be decrypted and verified using the accompanying EncryptedCredentials.
+    Translation *[]PassportFile `json:"translation,omitempty"`
+    // Base64-encoded element hash for using in PassportElementErrorUnspecified
+    Hash string `json:"hash"`
 }
 
 // Contains data required for decrypting and authenticating EncryptedPassportElement. See the Telegram Passport Documentation for a complete description of the data decryption and authentication processes.
@@ -1482,7 +1486,7 @@ type EncryptedCredentials struct {
     Secret string `json:"secret"`
 }
 
-// This object represents an error in the Telegram Passport element which was submitted that should be resolved by the user. It should be one of: PassportElementErrorDataField, PassportElementErrorFrontSide, PassportElementErrorReverseSide, PassportElementErrorSelfie, PassportElementErrorFile, PassportElementErrorFiles
+// This object represents an error in the Telegram Passport element which was submitted that should be resolved by the user. It should be one of: PassportElementErrorDataField, PassportElementErrorFrontSide, PassportElementErrorReverseSide, PassportElementErrorSelfie, PassportElementErrorFile, PassportElementErrorFiles, PassportElementErrorTranslationFile, PassportElementErrorTranslationFiles, PassportElementErrorUnspecified
 type PassportElementError interface{}
 
 // Represents an issue in one of the data fields that was provided by the user. The error is considered resolved when the field's value changes.
@@ -1559,6 +1563,42 @@ type PassportElementErrorFiles struct {
     Message string `json:"message"`
 }
 
+// Represents an issue with one of the files that constitute the translation of a document. The error is considered resolved when the file changes.
+type PassportElementErrorTranslationFile struct {
+    // Error source, must be translation_file
+    Source string `json:"source"`
+    // Type of element of the user's Telegram Passport which has the issue, one of “passport”, “driver_license”, “identity_card”, “internal_passport”, “utility_bill”, “bank_statement”, “rental_agreement”, “passport_registration”, “temporary_registration”
+    Type string `json:"type"`
+    // Base64-encoded file hash
+    FileHashes string `json:"file_hashes"`
+    // Error message
+    Message string `json:"message"`
+}
+
+// Represents an issue with the translated version of a document. The error is considered resolved when a file with the document translation change.
+type PassportElementErrorTranslationFiles struct {
+    // Error source, must be translation_files
+    Source string `json:"source"`
+    // Type of element of the user's Telegram Passport which has the issue, one of “passport”, “driver_license”, “identity_card”, “internal_passport”, “utility_bill”, “bank_statement”, “rental_agreement”, “passport_registration”, “temporary_registration”
+    Type string `json:"type"`
+    // List of base64-encoded file hashes
+    FileHashes []string `json:"file_hashes"`
+    // Error message
+    Message string `json:"message"`
+}
+
+// Represents an issue in an unspecified place. The error is considered resolved when new data is added.
+type PassportElementErrorUnspecified struct {
+    // Error source, must be unspecified
+    Source string `json:"source"`
+    // Type of element of the user's Telegram Passport which has the issue
+    Type string `json:"type"`
+    // Base64-encoded element hash
+    ElementHash string `json:"element_hash"`
+    // Error message
+    Message string `json:"message"`
+}
+
 // This object represents a game. Use BotFather to create and edit games, their short names will act as unique identifiers.
 type Game struct {
     // Title of the game
@@ -1572,21 +1612,7 @@ type Game struct {
     // Special entities that appear in text, such as usernames, URLs, bot commands, etc.
     TextEntities *[]MessageEntity `json:"text_entities,omitempty"`
     // Animation that will be displayed in the game message in chats. Upload via BotFather
-    Animation *AnimationGames `json:"animation,omitempty"`
-}
-
-// You can provide an animation for your game so that it looks stylish in chats (check out Lumberjack for an example). This object represents an animation file to be displayed in the message containing a game.
-type AnimationGames struct {
-    // Unique file identifier
-    FileId string `json:"file_id"`
-    // Animation thumbnail as defined by sender
-    Thumb *PhotoSize `json:"thumb,omitempty"`
-    // Original animation filename as defined by sender
-    FileName *string `json:"file_name,omitempty"`
-    // MIME type of the file as defined by sender
-    MimeType *string `json:"mime_type,omitempty"`
-    // File size
-    FileSize *int64 `json:"file_size,omitempty"`
+    Animation *Animation `json:"animation,omitempty"`
 }
 
 type CallbackGame interface{}
