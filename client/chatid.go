@@ -18,19 +18,26 @@ const (
     maxUserId = 2147483647
 )
 
+// telegram api peer types:
+//
+// - user (incl. bot)
+// - chat
+// - channel (incl. megagroup)
+
+// td api chat types:
+//
+// - private (incl. bot)
+// - basic group
+// - supergroup (incl. channel)
+// - secret
+
+
 // bot api chat types:
 //
 // - private (incl. bot)
 // - group
 // - supergroup
 // - channel
-
-// tdlib api chat types:
-//
-// - private (incl. bot)
-// - basic group
-// - supergroup (incl. channel)
-// - secret
 
 // It's chat ids. Not entity ids.
 //
