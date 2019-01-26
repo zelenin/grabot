@@ -27,6 +27,12 @@ func WithStdLogger(client *Client) {
     client.logger = StdLoger
 }
 
+func WithHttpClient(httpClient *http.Client) Option {
+    return func(client *Client) {
+        client.httpClient = httpClient
+    }
+}
+
 func New(token string, options ...Option) (*Client, error) {
     if !isValidToken(token) {
         return nil, fmt.Errorf("invalid token: %s", token)
