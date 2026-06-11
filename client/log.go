@@ -1,9 +1,9 @@
 package client
 
 import (
-    "os"
-    "log"
-    "io/ioutil"
+	"io/ioutil"
+	"log"
+	"os"
 )
 
 var NullLogger = log.New(ioutil.Discard, "", log.LstdFlags)

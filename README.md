@@ -1,6 +1,6 @@
 # grabot
 
-Go wrapper for [Telegram Bot API](https://core.telegram.org/bots/api) with full support of Bot API 4.1.
+Go wrapper for [Telegram Bot API](https://core.telegram.org/bots/api) with full support of Bot API 10.0.
 
 ## API client
 
@@ -31,16 +31,16 @@ file, _ := client.NewFileInputFile("/path/to/image.jpg")
 apiClient.SendPhoto(&client.SendPhotoRequest{
     ChatId:  client.StringChatId(channelName),
     Photo:   file,
-    Caption: client.OptionalString("Your answer?"),
+    Caption: new("Your answer?"),
     ReplyMarkup: &client.InlineKeyboardMarkup{
         InlineKeyboard: [][]client.InlineKeyboardButton{
             {
-                {Text: "Variant 1", Url: client.OptionalString("https://example.com/variant/1")},
-                {Text: "Variant 2", Url: client.OptionalString("https://example.com/variant/2")},
+                {Text: "Variant 1", Url: new("https://example.com/variant/1")},
+                {Text: "Variant 2", Url: new("https://example.com/variant/2")},
             },
             {
-                {Text: "Variant 3", Url: client.OptionalString("https://example.com/variant/3")},
-                {Text: "Variant 4", Url: client.OptionalString("https://example.com/variant/4")},
+                {Text: "Variant 3", Url: new("https://example.com/variant/3")},
+                {Text: "Variant 4", Url: new("https://example.com/variant/4")},
             },
         },
     },
@@ -100,7 +100,7 @@ ctx, _ := context.WithCancel(context.Background())
 
 longPoller := updates.NewLongPoller(apiClient)
 updatesChan, errsChan := longPoller.LongPoll(ctx, &client.GetUpdatesRequest{
-    Offset: client.OptionalInt(0),
+    Offset: new(int64(0)),
 }, 1*time.Second)
 
 for {
@@ -175,7 +175,7 @@ ctx, _ := context.WithCancel(context.Background())
 
 longPoller := updates.NewLongPoller(apiClient)
 updatesChan, errsChan := longPoller.LongPoll(ctx, &client.GetUpdatesRequest{
-    Offset: client.OptionalInt(0),
+    Offset: new(int64((0)),
 }, 1*time.Second)
 
 for {
