@@ -394,7 +394,7 @@ type Message struct {
 	// Optional. The supergroup has been migrated from a group with the specified identifier. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this identifier.
 	MigrateFromChatId *int64 `json:"migrate_from_chat_id,omitempty"`
 	// Optional. Specified message was pinned. Note that the Message object in this field will not contain further reply_to_message fields even if it itself is a reply.
-	PinnedMessage *MaybeInaccessibleMessage `json:"pinned_message,omitempty"`
+	PinnedMessage *Message `json:"pinned_message,omitempty"`
 	// Optional. Message is an invoice for a payment, information about the invoice. More about payments: https://core.telegram.org/bots/api#payments
 	Invoice *Invoice `json:"invoice,omitempty"`
 	// Optional. Message is a service message about a successful payment, information about the payment. More about payments: https://core.telegram.org/bots/api#payments
@@ -1211,7 +1211,7 @@ type ManagedBotUpdated struct {
 // Describes a service message about an option added to a poll.
 type PollOptionAdded struct {
 	// Optional. Message containing the poll to which the option was added, if known. Note that the Message object in this field will not contain the reply_to_message field even if it itself is a reply.
-	PollMessage *MaybeInaccessibleMessage `json:"poll_message,omitempty"`
+	PollMessage *Message `json:"poll_message,omitempty"`
 	// Unique identifier of the added option
 	OptionPersistentId string `json:"option_persistent_id"`
 	// Option text
@@ -1223,7 +1223,7 @@ type PollOptionAdded struct {
 // Describes a service message about an option deleted from a poll.
 type PollOptionDeleted struct {
 	// Optional. Message containing the poll from which the option was deleted, if known. Note that the Message object in this field will not contain the reply_to_message field even if it itself is a reply.
-	PollMessage *MaybeInaccessibleMessage `json:"poll_message,omitempty"`
+	PollMessage *Message `json:"poll_message,omitempty"`
 	// Unique identifier of the deleted option
 	OptionPersistentId string `json:"option_persistent_id"`
 	// Option text
@@ -1826,7 +1826,7 @@ type CallbackQuery struct {
 	// Sender
 	From User `json:"from"`
 	// Optional. Message sent by the bot with the callback button that originated the query
-	Message *MaybeInaccessibleMessage `json:"message,omitempty"`
+	Message *Message `json:"message,omitempty"`
 	// Optional. Identifier of the message sent via the bot in inline mode, that originated the query
 	InlineMessageId *string `json:"inline_message_id,omitempty"`
 	// Global identifier, uniquely corresponding to the chat to which the message with the callback button was sent. Useful for high scores in games.
