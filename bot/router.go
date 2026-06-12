@@ -11,7 +11,7 @@ type routeMiddleware struct {
 	router *Router
 }
 
-func (middleware *routeMiddleware) Process(ctx context.Context, update *client.Update, updateHandler updates.UpdateHandler) {
+func (middleware *routeMiddleware) Process(ctx context.Context, update client.Update, updateHandler updates.UpdateHandler) {
 	route := middleware.router.Match(update)
 
 	if route != nil {
@@ -30,14 +30,14 @@ func NewRouteMiddleware(router *Router) Middleware {
 	return middleware.Process
 }
 
-type RouteMatcher func(update *client.Update) bool
+type RouteMatcher func(update client.Update) bool
 
 type Route struct {
 	matcher RouteMatcher
 	handler Middleware
 }
 
-func (route *Route) Handle(ctx context.Context, update *client.Update, updateHandler updates.UpdateHandler) {
+func (route *Route) Handle(ctx context.Context, update client.Update, updateHandler updates.UpdateHandler) {
 	route.handler(ctx, update, updateHandler)
 }
 
@@ -62,7 +62,7 @@ func (router *Router) AddRoute(route *Route) {
 	router.routes = append(router.routes, route)
 }
 
-func (router *Router) Match(update *client.Update) *Route {
+func (router *Router) Match(update client.Update) *Route {
 	for _, route := range router.routes {
 		if route.matcher(update) {
 			return route

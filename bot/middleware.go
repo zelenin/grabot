@@ -8,15 +8,15 @@ import (
 	"github.com/zelenin/grabot/updates"
 )
 
-type Middleware func(ctx context.Context, update *client.Update, updateHandler updates.UpdateHandler)
+type Middleware func(ctx context.Context, update client.Update, updateHandler updates.UpdateHandler)
 
-func LoggingMiddleware(ctx context.Context, update *client.Update, updateHandler updates.UpdateHandler) {
+func LoggingMiddleware(ctx context.Context, update client.Update, updateHandler updates.UpdateHandler) {
 	log.Printf("%#v", update)
 
 	updateHandler(ctx, update)
 }
 
-func NoOpMiddleware(ctx context.Context, update *client.Update, updateHandler updates.UpdateHandler) {
+func NoOpMiddleware(ctx context.Context, update client.Update, updateHandler updates.UpdateHandler) {
 }
 
 type middlewarePipe struct {
@@ -25,7 +25,7 @@ type middlewarePipe struct {
 	current            int
 }
 
-func (pipe *middlewarePipe) Handle(ctx context.Context, update *client.Update) {
+func (pipe *middlewarePipe) Handle(ctx context.Context, update client.Update) {
 	if pipe.current == len(pipe.middlewares) {
 		pipe.fallbackMiddleware(ctx, update, updateHandler(pipe))
 		return
@@ -47,7 +47,7 @@ func newMiddlewarePipe(middlewares []Middleware) *middlewarePipe {
 }
 
 func updateHandler(pipe *middlewarePipe) updates.UpdateHandler {
-	return func(ctx context.Context, update *client.Update) {
+	return func(ctx context.Context, update client.Update) {
 		pipe.Handle(ctx, update)
 	}
 }

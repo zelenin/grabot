@@ -9,7 +9,7 @@ import (
 func BotCommandMatcher(botCommand string) RouteMatcher {
 	botCommand = normalizeBotCommand(botCommand)
 
-	return func(update *client.Update) bool {
+	return func(update client.Update) bool {
 		if update.Message == nil {
 			return false
 		}
@@ -34,7 +34,7 @@ func BotCommandMatcher(botCommand string) RouteMatcher {
 func HashtagMatcher(hashtag string) RouteMatcher {
 	hashtag = normalizeHashtag(hashtag)
 
-	return func(update *client.Update) bool {
+	return func(update client.Update) bool {
 		if update.Message == nil {
 			return false
 		}
@@ -59,7 +59,7 @@ func HashtagMatcher(hashtag string) RouteMatcher {
 func MentionMatcher(mention string) RouteMatcher {
 	mention = normalizeMention(mention)
 
-	return func(update *client.Update) bool {
+	return func(update client.Update) bool {
 		if update.Message == nil {
 			return false
 		}
@@ -82,37 +82,37 @@ func MentionMatcher(mention string) RouteMatcher {
 }
 
 func ChosenInlineResultMatcher() RouteMatcher {
-	return func(update *client.Update) bool {
+	return func(update client.Update) bool {
 		return update.ChosenInlineResult != nil
 	}
 }
 
 func CallbackQueryMatcher() RouteMatcher {
-	return func(update *client.Update) bool {
+	return func(update client.Update) bool {
 		return update.CallbackQuery != nil
 	}
 }
 
 func InlineQueryMatcher() RouteMatcher {
-	return func(update *client.Update) bool {
+	return func(update client.Update) bool {
 		return update.InlineQuery != nil
 	}
 }
 
 func MessageMatcher() RouteMatcher {
-	return func(update *client.Update) bool {
+	return func(update client.Update) bool {
 		return update.Message != nil
 	}
 }
 
 func PreCheckoutQueryMatcher() RouteMatcher {
-	return func(update *client.Update) bool {
+	return func(update client.Update) bool {
 		return update.PreCheckoutQuery != nil
 	}
 }
 
 func ShippingQueryMatcher() RouteMatcher {
-	return func(update *client.Update) bool {
+	return func(update client.Update) bool {
 		return update.ShippingQuery != nil
 	}
 }

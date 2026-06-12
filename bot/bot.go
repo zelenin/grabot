@@ -22,7 +22,7 @@ func (bot *Bot) Add(middleware Middleware) {
 	bot.middlewares = append(bot.middlewares, middleware)
 }
 
-func (bot *Bot) Handle(ctx context.Context, update *client.Update) {
+func (bot *Bot) Handle(ctx context.Context, update client.Update) {
 	if ctx == nil {
 		ctx = context.Background()
 	}

@@ -66,7 +66,7 @@ token := "<bot_token>"
 apiClient, _ := client.New(token/*, client.WithStdLogger*/)
 setWebhook(apiClient)
 
-webhookHandler := updates.NewWebhookHandler(func(ctx context.Context, update *client.Update) {
+webhookHandler := updates.NewWebhookHandler(func(ctx context.Context, update client.Update) {
     log.Printf("%#v", update)
 })
 
@@ -132,36 +132,36 @@ apiClient, _ := client.New(token/*, client.WithStdLogger*/)
 
 router := bot.NewRouter()
 
-router.AddRoute(bot.NewRoute(bot.BotCommandMatcher("/start"), func(ctx context.Context, update *client.Update, updateHandler updates.UpdateHandler) {
+router.AddRoute(bot.NewRoute(bot.BotCommandMatcher("/start"), func(ctx context.Context, update client.Update, updateHandler updates.UpdateHandler) {
     log.Printf("Handle update #%d [bot command]", update.UpdateId)
     
     updateHandler(ctx, update)
 }))
 
-router.AddRoute(bot.NewRoute(bot.HashtagMatcher("#hashtag"), func(ctx context.Context, update *client.Update, updateHandler updates.UpdateHandler) {
+router.AddRoute(bot.NewRoute(bot.HashtagMatcher("#hashtag"), func(ctx context.Context, update client.Update, updateHandler updates.UpdateHandler) {
     log.Printf("Handle update #%d [hashtag]", update.UpdateId)
     
     updateHandler(ctx, update)
 }))
 
-router.AddRoute(bot.NewRoute(bot.MentionMatcher("@NameOfTheBot"), func(ctx context.Context, update *client.Update, updateHandler updates.UpdateHandler) {
+router.AddRoute(bot.NewRoute(bot.MentionMatcher("@NameOfTheBot"), func(ctx context.Context, update client.Update, updateHandler updates.UpdateHandler) {
     log.Printf("Handle update #%d [mention]", update.UpdateId)
     
     updateHandler(ctx, update)
 }))
 
 router.AddRoute(bot.NewRoute(
-    func(update *client.Update) bool {
-        return update.Message != nil && update.Message.From != nil && *update.Message.From.Username == "username"
+    func(update client.Update) bool {
+        return update.Message != nil && update.Message.From != nil && update.Message.From.Username == "username"
     },
-    func(ctx context.Context, update *client.Update, updateHandler updates.UpdateHandler) {
-        log.Printf("Handle update #%d [from %s]", update.UpdateId, *update.Message.From.Username)
+    func(ctx context.Context, update client.Update, updateHandler updates.UpdateHandler) {
+        log.Printf("Handle update #%d [from %s]", update.UpdateId, update.Message.From.Username)
         
         updateHandler(ctx, update)
     }, 
 ))
 
-router.AddRoute(bot.NewRoute(bot.MessageMatcher(), func(ctx context.Context, update *client.Update, updateHandler updates.UpdateHandler) {
+router.AddRoute(bot.NewRoute(bot.MessageMatcher(), func(ctx context.Context, update client.Update, updateHandler updates.UpdateHandler) {
     log.Printf("Handle update #%d [message #%d]", update.UpdateId, update.Message.MessageId)
     
     updateHandler(ctx, update)

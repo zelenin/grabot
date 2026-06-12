@@ -6,4 +6,4 @@ import (
 	"github.com/zelenin/grabot/client"
 )
 
-type UpdateHandler func(ctx context.Context, update *client.Update)
+type UpdateHandler func(ctx context.Context, update client.Update)

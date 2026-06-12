@@ -34,7 +34,7 @@ func (handler WebhookHandler) ServeHTTP(res http.ResponseWriter, req *http.Reque
 		return
 	}
 
-	handler.updateHandler(req.Context(), &update)
+	handler.updateHandler(req.Context(), update)
 }
 
 func isValidWebhookRequest(req *http.Request) bool {
