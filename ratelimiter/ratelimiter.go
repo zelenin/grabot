@@ -1,83 +1,90 @@
 package ratelimiter
 
 import (
-    "time"
-    "github.com/zelenin/grabot/client"
+	"context"
+	"sync"
+	"time"
+
+	"github.com/zelenin/grabot/client"
+	"golang.org/x/time/rate"
 )
 
 // rate limits:
-//
 // 1 message/sec to chat
 // 30 message/sec
 // 20 message/min to group
 
-func New() *RateLimiter {
-    rateLimiter := &RateLimiter{
-        commonTicker: newCommonTicker(),
-        tasks:        make(chan Task, 1000),
-        tickerStorage: &tickerStorage{
-            tickers:             make(map[string]*time.Ticker),
-            chatTickerDuration:  time.Second,
-            groupTickerDuration: time.Minute / 20,
-        },
-    }
-
-    go rateLimiter.run()
-
-    return rateLimiter
-}
-
 type RateLimiter struct {
-    commonTicker  *time.Ticker
-    tasks         chan Task
-    tickerStorage *tickerStorage
+	commonLimiter *rate.Limiter
+	mu            sync.Mutex
+	limiters      map[string]*limiter
 }
 
-func (limiter *RateLimiter) AddTask(task Task) {
-    go func(tasks chan Task, task Task) {
-        tasks <- task
-    }(limiter.tasks, task)
+func New() *RateLimiter {
+	rateLimiter := &RateLimiter{
+		commonLimiter: rate.NewLimiter(rate.Every(1*time.Second/30), 1),
+	}
+
+	go rateLimiter.gc()
+
+	return rateLimiter
 }
 
-func (limiter *RateLimiter) run() {
-    for {
-        task := <-limiter.tasks
+func (rl *RateLimiter) gc() {
+	ticker := time.NewTicker(5 * time.Minute)
+	defer ticker.Stop()
 
-        <-limiter.commonTicker.C
-        <-limiter.tickerStorage.Get(task.Id).C
-
-        go task.Job()
-    }
+	for ; true; <-ticker.C {
+		rl.mu.Lock()
+		for k, v := range rl.limiters {
+			if v.accessedAt < (time.Now().Unix() - 5*60) {
+				delete(rl.limiters, k)
+			}
+		}
+		defer rl.mu.Unlock()
+	}
 }
 
-type Task struct {
-    Id  client.ChatId
-    Job Job
+func (rl *RateLimiter) Wait(ctx context.Context, chatId client.ChatId) error {
+	err := rl.commonLimiter.Wait(ctx)
+	if err != nil {
+		return err
+	}
+
+	return rl.getLimiter(chatId).Wait(ctx)
 }
 
-func NewTask(id client.ChatId, job Job) Task {
-    return Task{
-        Id:  id,
-        Job: job,
-    }
-}
+func (rl *RateLimiter) getLimiter(chatId client.ChatId) *rate.Limiter {
+	rl.mu.Lock()
+	defer rl.mu.Unlock()
 
-type Job func()
+	_, ok := rl.limiters[chatId.String()]
+	if !ok {
+		if isGroup(chatId) {
+			rl.limiters[chatId.String()] = &limiter{
+				limiter:    rate.NewLimiter(rate.Every(1*time.Minute/20), 1),
+				accessedAt: 0,
+			}
+		} else {
+			rl.limiters[chatId.String()] = &limiter{
+				limiter:    rate.NewLimiter(rate.Every(1*time.Second), 1),
+				accessedAt: 0,
+			}
+		}
+	}
 
-func newCommonTicker() *time.Ticker {
-    return time.NewTicker(time.Second / 30)
-}
+	rl.limiters[chatId.String()].accessedAt = time.Now().Unix()
 
-func newChatTicker() *time.Ticker {
-    return time.NewTicker(time.Second)
-}
-
-func newGroupTicker() *time.Ticker {
-    return time.NewTicker(time.Minute / 20)
+	return rl.limiters[chatId.String()].limiter
 }
 
 func isGroup(id client.ChatId) bool {
-    strId := id.String()
+	strId := id.String()
 
-    return strId[0] == '-' || strId[0] == '@'
+	return strId[0] == '-' || strId[0] == '@'
+}
+
+type limiter struct {
+	limiter    *rate.Limiter
+	accessedAt int64
 }
