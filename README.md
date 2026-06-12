@@ -1,6 +1,6 @@
 # grabot
 
-Go wrapper for [Telegram Bot API](https://core.telegram.org/bots/api) with full support of Bot API 10.0.
+Go wrapper for [Telegram Bot API](https://core.telegram.org/bots/api) with full support of Bot API 10.1.
 
 ## API client
 

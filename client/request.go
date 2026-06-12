@@ -1090,6 +1090,22 @@ type DeclineChatJoinRequestRequest struct {
 	UserId int64 `json:"user_id" structs:"user_id,omitnested"`
 }
 
+// Use this method to process a received chat join request query. Returns True on success.
+type AnswerChatJoinRequestQueryRequest struct {
+	// Unique identifier of the join request query
+	ChatJoinRequestQueryId string `json:"chat_join_request_query_id" structs:"chat_join_request_query_id,omitnested"`
+	// Result of the query. Must be either "approve" to allow the user to join the chat, "decline" to disallow the user to join the chat, or "queue" to leave the decision to other administrators.
+	Result string `json:"result" structs:"result,omitnested"`
+}
+
+// Use this method to process a received chat join request query by showing a Mini App to the user before deciding the outcome. Returns True on success.
+type SendChatJoinRequestWebAppRequest struct {
+	// Unique identifier of the join request query
+	ChatJoinRequestQueryId string `json:"chat_join_request_query_id" structs:"chat_join_request_query_id,omitnested"`
+	// The URL of the Mini App to be opened
+	WebAppUrl string `json:"web_app_url" structs:"web_app_url,omitnested"`
+}
+
 // Use this method to set a new profile photo for the chat. Photos can't be changed for private chats. The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights. Returns True on success.
 type SetChatPhotoRequest struct {
 	// Unique identifier for the target chat or username of the target channel in the format @username
@@ -1823,7 +1839,7 @@ type SavePreparedKeyboardButtonRequest struct {
 	Button KeyboardButton `json:"button" structs:"button,omitnested"`
 }
 
-// Use this method to edit text and game messages. On success, if the edited message is not an inline message, the edited Message is returned, otherwise True is returned. Note that business messages that were not sent by the bot and do not contain an inline keyboard can only be edited within 48 hours from the time they were sent.
+// Use this method to edit text, rich and game messages. On success, if the edited message is not an inline message, the edited Message is returned, otherwise True is returned. Note that business messages that were not sent by the bot and do not contain an inline keyboard can only be edited within 48 hours from the time they were sent.
 type EditMessageTextRequest struct {
 	// Unique identifier of the business connection on behalf of which the message to be edited was sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty" structs:"business_connection_id,omitempty,omitnested"`
@@ -1833,14 +1849,16 @@ type EditMessageTextRequest struct {
 	MessageId *int64 `json:"message_id,omitempty" structs:"message_id,omitempty,omitnested"`
 	// Required if chat_id and message_id are not specified. Identifier of the inline message.
 	InlineMessageId *string `json:"inline_message_id,omitempty" structs:"inline_message_id,omitempty,omitnested"`
-	// New text of the message, 1-4096 characters after entities parsing
-	Text string `json:"text" structs:"text,omitnested"`
+	// New text of the message, 1-4096 characters after entity parsing; required if rich_message isn't specified
+	Text *string `json:"text,omitempty" structs:"text,omitempty,omitnested"`
 	// Mode for parsing entities in the message text. See formatting options for more details.
 	ParseMode *string `json:"parse_mode,omitempty" structs:"parse_mode,omitempty,omitnested"`
 	// A JSON-serialized list of special entities that appear in message text, which can be specified instead of parse_mode
 	Entities []MessageEntity `json:"entities,omitempty" structs:"entities,omitempty,omitnested"`
 	// Link preview generation options for the message
 	LinkPreviewOptions *LinkPreviewOptions `json:"link_preview_options,omitempty" structs:"link_preview_options,omitempty,omitnested"`
+	// New rich content of the message; required if text isn't specified
+	RichMessage *InputRichMessage `json:"rich_message,omitempty" structs:"rich_message,omitempty,omitnested"`
 	// A JSON-serialized object for an inline keyboard
 	ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty" structs:"reply_markup,omitempty,omitnested"`
 }
@@ -1867,7 +1885,7 @@ type EditMessageCaptionRequest struct {
 	ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty" structs:"reply_markup,omitempty,omitnested"`
 }
 
-// Use this method to edit animation, audio, document, live photo, photo, or video messages, or to add media to text messages. If a message is part of a message album, then it can be edited only to an audio for audio albums, only to a document for document albums and to a photo, a live photo, or a video otherwise. When an inline message is edited, a new file can't be uploaded; use a previously uploaded file via its file_id or specify a URL. On success, if the edited message is not an inline message, the edited Message is returned, otherwise True is returned. Note that business messages that were not sent by the bot and do not contain an inline keyboard can only be edited within 48 hours from the time they were sent.
+// Use this method to edit animation, audio, document, live photo, photo, or video messages, or to replace a text or a rich message with a media. If a message is part of a message album, then it can be edited only to an audio for audio albums, only to a document for document albums and to a photo, a live photo, or a video otherwise. When an inline message is edited, a new file can't be uploaded; use a previously uploaded file via its file_id or specify a URL. On success, if the edited message is not an inline message, the edited Message is returned, otherwise True is returned. Note that business messages that were not sent by the bot and do not contain an inline keyboard can only be edited within 48 hours from the time they were sent.
 type EditMessageMediaRequest struct {
 	// Unique identifier of the business connection on behalf of which the message to be edited was sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty" structs:"business_connection_id,omitempty,omitnested"`
@@ -2191,6 +2209,46 @@ type SetCustomEmojiStickerSetThumbnailRequest struct {
 type DeleteStickerSetRequest struct {
 	// Sticker set name
 	Name string `json:"name" structs:"name,omitnested"`
+}
+
+// Use this method to send rich messages. If the message contains a block with a media element, then the bot must have the right to send the media to the chat. On success, the sent Message is returned.
+type SendRichMessageRequest struct {
+	// Unique identifier of the business connection on behalf of which the message will be sent
+	BusinessConnectionId *string `json:"business_connection_id,omitempty" structs:"business_connection_id,omitempty,omitnested"`
+	// Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
+	ChatId ChatId `json:"chat_id" structs:"chat_id,omitnested"`
+	// Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only
+	MessageThreadId *int64 `json:"message_thread_id,omitempty" structs:"message_thread_id,omitempty,omitnested"`
+	// Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
+	DirectMessagesTopicId *int64 `json:"direct_messages_topic_id,omitempty" structs:"direct_messages_topic_id,omitempty,omitnested"`
+	// The message to be sent
+	RichMessage InputRichMessage `json:"rich_message" structs:"rich_message,omitnested"`
+	// Sends the message silently. Users will receive a notification with no sound.
+	DisableNotification *bool `json:"disable_notification,omitempty" structs:"disable_notification,omitempty,omitnested"`
+	// Protects the contents of the sent message from forwarding and saving
+	ProtectContent *bool `json:"protect_content,omitempty" structs:"protect_content,omitempty,omitnested"`
+	// Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance.
+	AllowPaidBroadcast *bool `json:"allow_paid_broadcast,omitempty" structs:"allow_paid_broadcast,omitempty,omitnested"`
+	// Unique identifier of the message effect to be added to the message; for private chats only
+	MessageEffectId *string `json:"message_effect_id,omitempty" structs:"message_effect_id,omitempty,omitnested"`
+	// A JSON-serialized object containing the parameters of the suggested post to send; for direct messages chats only. If the message is sent as a reply to another suggested post, then that suggested post is automatically declined.
+	SuggestedPostParameters *SuggestedPostParameters `json:"suggested_post_parameters,omitempty" structs:"suggested_post_parameters,omitempty,omitnested"`
+	// Description of the message to reply to
+	ReplyParameters *ReplyParameters `json:"reply_parameters,omitempty" structs:"reply_parameters,omitempty,omitnested"`
+	// Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
+	ReplyMarkup ReplyMarkup `json:"reply_markup,omitempty" structs:"reply_markup,omitempty,omitnested"`
+}
+
+// Use this method to stream a partial rich message to a user while the message is being generated. Note that the streamed draft is ephemeral and acts as a temporary 30-second preview - once the output is finalized, you must call sendRichMessage with the complete message to persist it in the user's chat. Returns True on success.
+type SendRichMessageDraftRequest struct {
+	// Unique identifier for the target private chat
+	ChatId int64 `json:"chat_id" structs:"chat_id,omitnested"`
+	// Unique identifier for the target message thread
+	MessageThreadId *int64 `json:"message_thread_id,omitempty" structs:"message_thread_id,omitempty,omitnested"`
+	// Unique identifier of the message draft; must be non-zero. Changes to drafts with the same identifier are animated.
+	DraftId int64 `json:"draft_id" structs:"draft_id,omitnested"`
+	// The partial message to be streamed
+	RichMessage InputRichMessage `json:"rich_message" structs:"rich_message,omitnested"`
 }
 
 // Use this method to send answers to an inline query. On success, True is returned.
