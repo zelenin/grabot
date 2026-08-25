@@ -59,6 +59,8 @@ type SendMessageRequest struct {
 	MessageThreadId *int64 `json:"message_thread_id,omitempty" structs:"message_thread_id,omitempty,omitnested"`
 	// Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
 	DirectMessagesTopicId *int64 `json:"direct_messages_topic_id,omitempty" structs:"direct_messages_topic_id,omitempty,omitnested"`
+	// A JSON-serialized object containing the parameters of the ephemeral message to send
+	EphemeralMessageParameters *EphemeralMessageParameters `json:"ephemeral_message_parameters,omitempty" structs:"ephemeral_message_parameters,omitempty,omitnested"`
 	// Text of the message to be sent, 1-4096 characters after entities parsing
 	Text string `json:"text" structs:"text,omitnested"`
 	// Mode for parsing entities in the message text. See formatting options for more details.
@@ -107,7 +109,7 @@ type ForwardMessageRequest struct {
 	MessageId int64 `json:"message_id" structs:"message_id,omitnested"`
 }
 
-// Use this method to forward multiple messages of any kind. If some of the specified messages can't be found or forwarded, they are skipped. Service messages and messages with protected content can't be forwarded. Album grouping is kept for forwarded messages. On success, an array of MessageId of the sent messages is returned.
+// Use this method to forward multiple messages of any kind. If some of the specified messages can't be found or forwarded, they are skipped. Service messages and messages with protected content can't be forwarded. Album grouping is kept for forwarded messages. On success, an Array of MessageId of the sent messages is returned.
 type ForwardMessagesRequest struct {
 	// Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
 	ChatId ChatId `json:"chat_id" structs:"chat_id,omitnested"`
@@ -125,7 +127,7 @@ type ForwardMessagesRequest struct {
 	ProtectContent *bool `json:"protect_content,omitempty" structs:"protect_content,omitempty,omitnested"`
 }
 
-// Use this method to copy messages of any kind. Service messages, paid media messages, giveaway messages, giveaway winners messages, and invoice messages can't be copied. A quiz poll can be copied only if the value of the field correct_option_id is known to the bot. The method is analogous to the method forwardMessage, but the copied message doesn't have a link to the original message. Returns the MessageId of the sent message on success.
+// Use this method to copy messages of any kind. Service messages, paid media messages, giveaway messages, giveaway winners messages, and invoice messages can't be copied. A quiz poll can be copied only if the value of the field correct_option_ids is known to the bot. The method is analogous to the method forwardMessage, but the copied message doesn't have a link to the original message. Returns the MessageId of the sent message on success.
 type CopyMessageRequest struct {
 	// Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
 	ChatId ChatId `json:"chat_id" structs:"chat_id,omitnested"`
@@ -145,7 +147,7 @@ type CopyMessageRequest struct {
 	ParseMode *string `json:"parse_mode,omitempty" structs:"parse_mode,omitempty,omitnested"`
 	// A JSON-serialized list of special entities that appear in the new caption, which can be specified instead of parse_mode
 	CaptionEntities []MessageEntity `json:"caption_entities,omitempty" structs:"caption_entities,omitempty,omitnested"`
-	// Pass True, if the caption must be shown above the message media. Ignored if a new caption isn't specified.
+	// Pass True if the caption must be shown above the message media. Ignored if a new caption isn't specified.
 	ShowCaptionAboveMedia *bool `json:"show_caption_above_media,omitempty" structs:"show_caption_above_media,omitempty,omitnested"`
 	// Sends the message silently. Users will receive a notification with no sound.
 	DisableNotification *bool `json:"disable_notification,omitempty" structs:"disable_notification,omitempty,omitnested"`
@@ -163,7 +165,7 @@ type CopyMessageRequest struct {
 	ReplyMarkup ReplyMarkup `json:"reply_markup,omitempty" structs:"reply_markup,omitempty,omitnested"`
 }
 
-// Use this method to copy messages of any kind. If some of the specified messages can't be found or copied, they are skipped. Service messages, paid media messages, giveaway messages, giveaway winners messages, and invoice messages can't be copied. A quiz poll can be copied only if the value of the field correct_option_id is known to the bot. The method is analogous to the method forwardMessages, but the copied messages don't have a link to the original message. Album grouping is kept for copied messages. On success, an array of MessageId of the sent messages is returned.
+// Use this method to copy messages of any kind. If some of the specified messages can't be found or copied, they are skipped. Service messages, paid media messages, giveaway messages, giveaway winners messages, and invoice messages can't be copied. A quiz poll can be copied only if the value of the field correct_option_ids is known to the bot. The method is analogous to the method forwardMessages, but the copied messages don't have a link to the original message. Album grouping is kept for copied messages. On success, an Array of MessageId of the sent messages is returned.
 type CopyMessagesRequest struct {
 	// Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
 	ChatId ChatId `json:"chat_id" structs:"chat_id,omitnested"`
@@ -193,6 +195,8 @@ type SendPhotoRequest struct {
 	MessageThreadId *int64 `json:"message_thread_id,omitempty" structs:"message_thread_id,omitempty,omitnested"`
 	// Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
 	DirectMessagesTopicId *int64 `json:"direct_messages_topic_id,omitempty" structs:"direct_messages_topic_id,omitempty,omitnested"`
+	// A JSON-serialized object containing the parameters of the ephemeral message to send
+	EphemeralMessageParameters *EphemeralMessageParameters `json:"ephemeral_message_parameters,omitempty" structs:"ephemeral_message_parameters,omitempty,omitnested"`
 	// Photo to send. Pass a file_id as String to send a photo that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a photo from the Internet, or upload a new photo using multipart/form-data. The photo must be at most 10 MB in size. The photo's width and height must not exceed 10000 in total. Width and height ratio must be at most 20. More information on Sending Files: https://core.telegram.org/bots/api#sending-files
 	Photo InputFile `json:"photo" structs:"photo,omitnested"`
 	// Photo caption (may also be used when resending photos by file_id), 0-1024 characters after entities parsing
@@ -201,7 +205,7 @@ type SendPhotoRequest struct {
 	ParseMode *string `json:"parse_mode,omitempty" structs:"parse_mode,omitempty,omitnested"`
 	// A JSON-serialized list of special entities that appear in the caption, which can be specified instead of parse_mode
 	CaptionEntities []MessageEntity `json:"caption_entities,omitempty" structs:"caption_entities,omitempty,omitnested"`
-	// Pass True, if the caption must be shown above the message media
+	// Pass True if the caption must be shown above the message media
 	ShowCaptionAboveMedia *bool `json:"show_caption_above_media,omitempty" structs:"show_caption_above_media,omitempty,omitnested"`
 	// Pass True if the photo needs to be covered with a spoiler animation
 	HasSpoiler *bool `json:"has_spoiler,omitempty" structs:"has_spoiler,omitempty,omitnested"`
@@ -231,6 +235,8 @@ type SendLivePhotoRequest struct {
 	MessageThreadId *int64 `json:"message_thread_id,omitempty" structs:"message_thread_id,omitempty,omitnested"`
 	// Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
 	DirectMessagesTopicId *int64 `json:"direct_messages_topic_id,omitempty" structs:"direct_messages_topic_id,omitempty,omitnested"`
+	// A JSON-serialized object containing the parameters of the ephemeral message to send
+	EphemeralMessageParameters *EphemeralMessageParameters `json:"ephemeral_message_parameters,omitempty" structs:"ephemeral_message_parameters,omitempty,omitnested"`
 	// Live photo video to send. The video must be no longer than 10 seconds and must not exceed 10 MB in size. Pass a file_id as String to send a video that exists on the Telegram servers (recommended) or upload a new video using multipart/form-data. More information on Sending Files: https://core.telegram.org/bots/api#sending-files. Sending live photos by a URL is currently unsupported.
 	LivePhoto InputFile `json:"live_photo" structs:"live_photo,omitnested"`
 	// The static photo to send. Pass a file_id as String to send a photo that exists on the Telegram servers (recommended) or upload a new video using multipart/form-data. More information on Sending Files: https://core.telegram.org/bots/api#sending-files. Sending live photos by a URL is currently unsupported.
@@ -241,7 +247,7 @@ type SendLivePhotoRequest struct {
 	ParseMode *string `json:"parse_mode,omitempty" structs:"parse_mode,omitempty,omitnested"`
 	// A JSON-serialized list of special entities that appear in the caption, which can be specified instead of parse_mode
 	CaptionEntities []MessageEntity `json:"caption_entities,omitempty" structs:"caption_entities,omitempty,omitnested"`
-	// Pass True, if the caption must be shown above the message media
+	// Pass True if the caption must be shown above the message media
 	ShowCaptionAboveMedia *bool `json:"show_caption_above_media,omitempty" structs:"show_caption_above_media,omitempty,omitnested"`
 	// Pass True if the video needs to be covered with a spoiler animation
 	HasSpoiler *bool `json:"has_spoiler,omitempty" structs:"has_spoiler,omitempty,omitnested"`
@@ -272,6 +278,8 @@ type SendAudioRequest struct {
 	MessageThreadId *int64 `json:"message_thread_id,omitempty" structs:"message_thread_id,omitempty,omitnested"`
 	// Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
 	DirectMessagesTopicId *int64 `json:"direct_messages_topic_id,omitempty" structs:"direct_messages_topic_id,omitempty,omitnested"`
+	// A JSON-serialized object containing the parameters of the ephemeral message to send
+	EphemeralMessageParameters *EphemeralMessageParameters `json:"ephemeral_message_parameters,omitempty" structs:"ephemeral_message_parameters,omitempty,omitnested"`
 	// Audio file to send. Pass a file_id as String to send an audio file that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get an audio file from the Internet, or upload a new one using multipart/form-data. More information on Sending Files: https://core.telegram.org/bots/api#sending-files
 	Audio InputFile `json:"audio" structs:"audio,omitnested"`
 	// Audio caption, 0-1024 characters after entities parsing
@@ -314,6 +322,8 @@ type SendDocumentRequest struct {
 	MessageThreadId *int64 `json:"message_thread_id,omitempty" structs:"message_thread_id,omitempty,omitnested"`
 	// Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
 	DirectMessagesTopicId *int64 `json:"direct_messages_topic_id,omitempty" structs:"direct_messages_topic_id,omitempty,omitnested"`
+	// A JSON-serialized object containing the parameters of the ephemeral message to send
+	EphemeralMessageParameters *EphemeralMessageParameters `json:"ephemeral_message_parameters,omitempty" structs:"ephemeral_message_parameters,omitempty,omitnested"`
 	// File to send. Pass a file_id as String to send a file that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data. More information on Sending Files: https://core.telegram.org/bots/api#sending-files
 	Document InputFile `json:"document" structs:"document,omitnested"`
 	// Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass "attach://<file_attach_name>" if the thumbnail was uploaded using multipart/form-data under <file_attach_name>. More information on Sending Files: https://core.telegram.org/bots/api#sending-files
@@ -352,6 +362,8 @@ type SendVideoRequest struct {
 	MessageThreadId *int64 `json:"message_thread_id,omitempty" structs:"message_thread_id,omitempty,omitnested"`
 	// Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
 	DirectMessagesTopicId *int64 `json:"direct_messages_topic_id,omitempty" structs:"direct_messages_topic_id,omitempty,omitnested"`
+	// A JSON-serialized object containing the parameters of the ephemeral message to send
+	EphemeralMessageParameters *EphemeralMessageParameters `json:"ephemeral_message_parameters,omitempty" structs:"ephemeral_message_parameters,omitempty,omitnested"`
 	// Video to send. Pass a file_id as String to send a video that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a video from the Internet, or upload a new video using multipart/form-data. More information on Sending Files: https://core.telegram.org/bots/api#sending-files
 	Video InputFile `json:"video" structs:"video,omitnested"`
 	// Duration of sent video in seconds
@@ -372,7 +384,7 @@ type SendVideoRequest struct {
 	ParseMode *string `json:"parse_mode,omitempty" structs:"parse_mode,omitempty,omitnested"`
 	// A JSON-serialized list of special entities that appear in the caption, which can be specified instead of parse_mode
 	CaptionEntities []MessageEntity `json:"caption_entities,omitempty" structs:"caption_entities,omitempty,omitnested"`
-	// Pass True, if the caption must be shown above the message media
+	// Pass True if the caption must be shown above the message media
 	ShowCaptionAboveMedia *bool `json:"show_caption_above_media,omitempty" structs:"show_caption_above_media,omitempty,omitnested"`
 	// Pass True if the video needs to be covered with a spoiler animation
 	HasSpoiler *bool `json:"has_spoiler,omitempty" structs:"has_spoiler,omitempty,omitnested"`
@@ -404,6 +416,8 @@ type SendAnimationRequest struct {
 	MessageThreadId *int64 `json:"message_thread_id,omitempty" structs:"message_thread_id,omitempty,omitnested"`
 	// Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
 	DirectMessagesTopicId *int64 `json:"direct_messages_topic_id,omitempty" structs:"direct_messages_topic_id,omitempty,omitnested"`
+	// A JSON-serialized object containing the parameters of the ephemeral message to send
+	EphemeralMessageParameters *EphemeralMessageParameters `json:"ephemeral_message_parameters,omitempty" structs:"ephemeral_message_parameters,omitempty,omitnested"`
 	// Animation to send. Pass a file_id as String to send an animation that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get an animation from the Internet, or upload a new animation using multipart/form-data. More information on Sending Files: https://core.telegram.org/bots/api#sending-files
 	Animation InputFile `json:"animation" structs:"animation,omitnested"`
 	// Duration of sent animation in seconds
@@ -420,7 +434,7 @@ type SendAnimationRequest struct {
 	ParseMode *string `json:"parse_mode,omitempty" structs:"parse_mode,omitempty,omitnested"`
 	// A JSON-serialized list of special entities that appear in the caption, which can be specified instead of parse_mode
 	CaptionEntities []MessageEntity `json:"caption_entities,omitempty" structs:"caption_entities,omitempty,omitnested"`
-	// Pass True, if the caption must be shown above the message media
+	// Pass True if the caption must be shown above the message media
 	ShowCaptionAboveMedia *bool `json:"show_caption_above_media,omitempty" structs:"show_caption_above_media,omitempty,omitnested"`
 	// Pass True if the animation needs to be covered with a spoiler animation
 	HasSpoiler *bool `json:"has_spoiler,omitempty" structs:"has_spoiler,omitempty,omitnested"`
@@ -450,6 +464,8 @@ type SendVoiceRequest struct {
 	MessageThreadId *int64 `json:"message_thread_id,omitempty" structs:"message_thread_id,omitempty,omitnested"`
 	// Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
 	DirectMessagesTopicId *int64 `json:"direct_messages_topic_id,omitempty" structs:"direct_messages_topic_id,omitempty,omitnested"`
+	// A JSON-serialized object containing the parameters of the ephemeral message to send
+	EphemeralMessageParameters *EphemeralMessageParameters `json:"ephemeral_message_parameters,omitempty" structs:"ephemeral_message_parameters,omitempty,omitnested"`
 	// Audio file to send. Pass a file_id as String to send a file that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data. More information on Sending Files: https://core.telegram.org/bots/api#sending-files
 	Voice InputFile `json:"voice" structs:"voice,omitnested"`
 	// Voice message caption, 0-1024 characters after entities parsing
@@ -476,7 +492,7 @@ type SendVoiceRequest struct {
 	ReplyMarkup ReplyMarkup `json:"reply_markup,omitempty" structs:"reply_markup,omitempty,omitnested"`
 }
 
-// As of v.4.0, Telegram clients support rounded square MPEG4 videos of up to 1 minute long. Use this method to send video messages. On success, the sent Message is returned.
+// Use this method to send a rounded square MPEG4 video of up to 1 minute long. On success, the sent Message is returned.
 type SendVideoNoteRequest struct {
 	// Unique identifier of the business connection on behalf of which the message will be sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty" structs:"business_connection_id,omitempty,omitnested"`
@@ -486,6 +502,8 @@ type SendVideoNoteRequest struct {
 	MessageThreadId *int64 `json:"message_thread_id,omitempty" structs:"message_thread_id,omitempty,omitnested"`
 	// Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
 	DirectMessagesTopicId *int64 `json:"direct_messages_topic_id,omitempty" structs:"direct_messages_topic_id,omitempty,omitnested"`
+	// A JSON-serialized object containing the parameters of the ephemeral message to send
+	EphemeralMessageParameters *EphemeralMessageParameters `json:"ephemeral_message_parameters,omitempty" structs:"ephemeral_message_parameters,omitempty,omitnested"`
 	// Video note to send. Pass a file_id as String to send a video note that exists on the Telegram servers (recommended) or upload a new video using multipart/form-data. More information on Sending Files: https://core.telegram.org/bots/api#sending-files. Sending video notes by a URL is currently unsupported.
 	VideoNote InputFile `json:"video_note" structs:"video_note,omitnested"`
 	// Duration of sent video in seconds
@@ -522,7 +540,7 @@ type SendPaidMediaRequest struct {
 	DirectMessagesTopicId *int64 `json:"direct_messages_topic_id,omitempty" structs:"direct_messages_topic_id,omitempty,omitnested"`
 	// The number of Telegram Stars that must be paid to buy access to the media; 1-25000
 	StarCount int64 `json:"star_count" structs:"star_count,omitnested"`
-	// A JSON-serialized array describing the media to be sent; up to 10 items
+	// A JSON-serialized Array describing the media to be sent; up to 10 items
 	Media []InputPaidMedia `json:"media" structs:"media,omitnested"`
 	// Bot-defined paid media payload, 0-128 bytes. This will not be displayed to the user, use it for your internal processes.
 	Payload *string `json:"payload,omitempty" structs:"payload,omitempty,omitnested"`
@@ -532,7 +550,7 @@ type SendPaidMediaRequest struct {
 	ParseMode *string `json:"parse_mode,omitempty" structs:"parse_mode,omitempty,omitnested"`
 	// A JSON-serialized list of special entities that appear in the caption, which can be specified instead of parse_mode
 	CaptionEntities []MessageEntity `json:"caption_entities,omitempty" structs:"caption_entities,omitempty,omitnested"`
-	// Pass True, if the caption must be shown above the message media
+	// Pass True if the caption must be shown above the message media
 	ShowCaptionAboveMedia *bool `json:"show_caption_above_media,omitempty" structs:"show_caption_above_media,omitempty,omitnested"`
 	// Sends the message silently. Users will receive a notification with no sound.
 	DisableNotification *bool `json:"disable_notification,omitempty" structs:"disable_notification,omitempty,omitnested"`
@@ -548,7 +566,7 @@ type SendPaidMediaRequest struct {
 	ReplyMarkup ReplyMarkup `json:"reply_markup,omitempty" structs:"reply_markup,omitempty,omitnested"`
 }
 
-// Use this method to send a group of photos, live photos, videos, documents or audios as an album. Documents and audio files can be only grouped in an album with messages of the same type. On success, an array of Message objects that were sent is returned.
+// Use this method to send a group of photos, live photos, videos, documents or audios as an album. Documents and audio files can be only grouped in an album with messages of the same type. On success, an Array of Message objects that were sent is returned.
 type SendMediaGroupRequest struct {
 	// Unique identifier of the business connection on behalf of which the message will be sent
 	BusinessConnectionId *string `json:"business_connection_id,omitempty" structs:"business_connection_id,omitempty,omitnested"`
@@ -558,7 +576,7 @@ type SendMediaGroupRequest struct {
 	MessageThreadId *int64 `json:"message_thread_id,omitempty" structs:"message_thread_id,omitempty,omitnested"`
 	// Identifier of the direct messages topic to which the messages will be sent; required if the messages are sent to a direct messages chat
 	DirectMessagesTopicId *int64 `json:"direct_messages_topic_id,omitempty" structs:"direct_messages_topic_id,omitempty,omitnested"`
-	// A JSON-serialized array describing messages to be sent, must include 2-10 items
+	// A JSON-serialized Array describing messages to be sent, must include 2-10 items
 	Media any `json:"media" structs:"media,omitnested"`
 	// Sends messages silently. Users will receive a notification with no sound.
 	DisableNotification *bool `json:"disable_notification,omitempty" structs:"disable_notification,omitempty,omitnested"`
@@ -582,13 +600,15 @@ type SendLocationRequest struct {
 	MessageThreadId *int64 `json:"message_thread_id,omitempty" structs:"message_thread_id,omitempty,omitnested"`
 	// Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
 	DirectMessagesTopicId *int64 `json:"direct_messages_topic_id,omitempty" structs:"direct_messages_topic_id,omitempty,omitnested"`
+	// A JSON-serialized object containing the parameters of the ephemeral message to send
+	EphemeralMessageParameters *EphemeralMessageParameters `json:"ephemeral_message_parameters,omitempty" structs:"ephemeral_message_parameters,omitempty,omitnested"`
 	// Latitude of the location
 	Latitude float64 `json:"latitude" structs:"latitude,omitnested"`
 	// Longitude of the location
 	Longitude float64 `json:"longitude" structs:"longitude,omitnested"`
 	// The radius of uncertainty for the location, measured in meters; 0-1500
 	HorizontalAccuracy *float64 `json:"horizontal_accuracy,omitempty" structs:"horizontal_accuracy,omitempty,omitnested"`
-	// Period in seconds during which the location will be updated (see Live Locations, should be between 60 and 86400, or 0x7FFFFFFF for live locations that can be edited indefinitely
+	// Period in seconds during which the location will be updated (see Live Locations), must be between 60 and 86400, or 0x7FFFFFFF for live locations that can be edited indefinitely. Must be 0 for ephemeral messages.
 	LivePeriod *int64 `json:"live_period,omitempty" structs:"live_period,omitempty,omitnested"`
 	// For live locations, a direction in which the user is moving, in degrees. Must be between 1 and 360 if specified.
 	Heading *int64 `json:"heading,omitempty" structs:"heading,omitempty,omitnested"`
@@ -620,6 +640,8 @@ type SendVenueRequest struct {
 	MessageThreadId *int64 `json:"message_thread_id,omitempty" structs:"message_thread_id,omitempty,omitnested"`
 	// Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
 	DirectMessagesTopicId *int64 `json:"direct_messages_topic_id,omitempty" structs:"direct_messages_topic_id,omitempty,omitnested"`
+	// A JSON-serialized object containing the parameters of the ephemeral message to send
+	EphemeralMessageParameters *EphemeralMessageParameters `json:"ephemeral_message_parameters,omitempty" structs:"ephemeral_message_parameters,omitempty,omitnested"`
 	// Latitude of the venue
 	Latitude float64 `json:"latitude" structs:"latitude,omitnested"`
 	// Longitude of the venue
@@ -662,6 +684,8 @@ type SendContactRequest struct {
 	MessageThreadId *int64 `json:"message_thread_id,omitempty" structs:"message_thread_id,omitempty,omitnested"`
 	// Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
 	DirectMessagesTopicId *int64 `json:"direct_messages_topic_id,omitempty" structs:"direct_messages_topic_id,omitempty,omitnested"`
+	// A JSON-serialized object containing the parameters of the ephemeral message to send
+	EphemeralMessageParameters *EphemeralMessageParameters `json:"ephemeral_message_parameters,omitempty" structs:"ephemeral_message_parameters,omitempty,omitnested"`
 	// Contact's phone number
 	PhoneNumber string `json:"phone_number" structs:"phone_number,omitnested"`
 	// Contact's first name
@@ -706,17 +730,17 @@ type SendPollRequest struct {
 	IsAnonymous *bool `json:"is_anonymous,omitempty" structs:"is_anonymous,omitempty,omitnested"`
 	// Poll type, "quiz" or "regular", defaults to "regular"
 	Type *string `json:"type,omitempty" structs:"type,omitempty,omitnested"`
-	// Pass True, if the poll allows multiple answers, defaults to False
+	// Pass True if the poll allows multiple answers, defaults to False
 	AllowsMultipleAnswers *bool `json:"allows_multiple_answers,omitempty" structs:"allows_multiple_answers,omitempty,omitnested"`
-	// Pass True, if the poll allows to change chosen answer options, defaults to False for quizzes and to True for regular polls
+	// Pass True if the poll allows to change chosen answer options, defaults to False for quizzes and to True for regular polls
 	AllowsRevoting *bool `json:"allows_revoting,omitempty" structs:"allows_revoting,omitempty,omitnested"`
-	// Pass True, if the poll options must be shown in random order
+	// Pass True if the poll options must be shown in random order
 	ShuffleOptions *bool `json:"shuffle_options,omitempty" structs:"shuffle_options,omitempty,omitnested"`
-	// Pass True, if answer options can be added to the poll after creation; not supported for anonymous polls and quizzes
+	// Pass True if answer options can be added to the poll after creation; not supported for anonymous polls and quizzes
 	AllowAddingOptions *bool `json:"allow_adding_options,omitempty" structs:"allow_adding_options,omitempty,omitnested"`
-	// Pass True, if poll results must be shown only after the poll closes
+	// Pass True if poll results must be shown only after the poll closes
 	HideResultsUntilCloses *bool `json:"hide_results_until_closes,omitempty" structs:"hide_results_until_closes,omitempty,omitnested"`
-	// Pass True, if voting is limited to users who have been members of the chat where the poll is being sent for more than 24 hours; for channel chats only
+	// Pass True if voting is limited to users who have been members of the chat where the poll is being sent for more than 24 hours; for channel chats only
 	MembersOnly *bool `json:"members_only,omitempty" structs:"members_only,omitempty,omitnested"`
 	// A JSON-serialized list of 0-12 two-letter ISO 3166-1 alpha-2 country codes indicating the countries from which users can vote in the poll; for channel chats only. Use "FT" as a country code to allow users with anonymous numbers to vote. If omitted or empty, then users from any country can participate in the poll.
 	CountryCodes []string `json:"country_codes,omitempty" structs:"country_codes,omitempty,omitnested"`
@@ -812,7 +836,7 @@ type SendMessageDraftRequest struct {
 	ChatId int64 `json:"chat_id" structs:"chat_id,omitnested"`
 	// Unique identifier for the target message thread
 	MessageThreadId *int64 `json:"message_thread_id,omitempty" structs:"message_thread_id,omitempty,omitnested"`
-	// Unique identifier of the message draft; must be non-zero. Changes of drafts with the same identifier are animated.
+	// Unique identifier of the message draft; must be non-zero. Changes to drafts with the same identifier are animated. Otherwise, the draft is replaced without animation.
 	DraftId int64 `json:"draft_id" structs:"draft_id,omitnested"`
 	// Text of the message to be sent, 0-4096 characters after entities parsing. Pass an empty text to show a "Thinking..." placeholder.
 	Text *string `json:"text,omitempty" structs:"text,omitempty,omitnested"`
@@ -820,6 +844,10 @@ type SendMessageDraftRequest struct {
 	ParseMode *string `json:"parse_mode,omitempty" structs:"parse_mode,omitempty,omitnested"`
 	// A JSON-serialized list of special entities that appear in message text, which can be specified instead of parse_mode
 	Entities []MessageEntity `json:"entities,omitempty" structs:"entities,omitempty,omitnested"`
+	// Pass True to show the user a button to stop further drafts. The bot will receive an Update "stopped_message_generation" if the user presses the button.
+	CanStop *bool `json:"can_stop,omitempty" structs:"can_stop,omitempty,omitnested"`
+	// Pass True to keep the draft in the chat when the button is pressed. The draft will still disappear after a short time or if the bot sends a message. To fully preserve the partial draft, the bot should send it as a new message.
+	KeepOnStop *bool `json:"keep_on_stop,omitempty" structs:"keep_on_stop,omitempty,omitnested"`
 }
 
 // Use this method when you need to tell the user that something is happening on the bot's side. The status is set for 5 seconds or less (when a message arrives from your bot, Telegram clients clear its typing status). Returns True on success.
@@ -960,6 +988,8 @@ type PromoteChatMemberRequest struct {
 	CanManageDirectMessages *bool `json:"can_manage_direct_messages,omitempty" structs:"can_manage_direct_messages,omitempty,omitnested"`
 	// Pass True if the administrator can edit the tags of regular members; for groups and supergroups only
 	CanManageTags *bool `json:"can_manage_tags,omitempty" structs:"can_manage_tags,omitempty,omitnested"`
+	// Pass True if the administrator can manage chat welcome messages or directly send them in the case of bots
+	CanSendWelcomeMessages *bool `json:"can_send_welcome_messages,omitempty" structs:"can_send_welcome_messages,omitempty,omitnested"`
 }
 
 // Use this method to set a custom title for an administrator in a supergroup promoted by the bot. Returns True on success.
@@ -1098,11 +1128,11 @@ type AnswerChatJoinRequestQueryRequest struct {
 	Result string `json:"result" structs:"result,omitnested"`
 }
 
-// Use this method to process a received chat join request query by showing a Mini App to the user before deciding the outcome. Returns True on success.
+// Use this method to process a received chat join request query by showing a Mini App to the user before deciding the outcome. Call answerChatJoinRequestQuery to resolve the join request query based on the user interaction with the Mini App. Returns True on success.
 type SendChatJoinRequestWebAppRequest struct {
 	// Unique identifier of the join request query
 	ChatJoinRequestQueryId string `json:"chat_join_request_query_id" structs:"chat_join_request_query_id,omitnested"`
-	// The URL of the Mini App to be opened
+	// An HTTPS URL of a Web App to be opened with additional data as specified in Initializing Web Apps
 	WebAppUrl string `json:"web_app_url" structs:"web_app_url,omitnested"`
 }
 
@@ -1184,7 +1214,7 @@ type GetChatAdministratorsRequest struct {
 	ReturnBots *bool `json:"return_bots,omitempty" structs:"return_bots,omitempty,omitnested"`
 }
 
-// Use this method to get the number of members in a chat. Returns Int on success.
+// Use this method to get the number of members in a chat. Returns Integer on success.
 type GetChatMemberCountRequest struct {
 	// Unique identifier for the target chat or username of the target supergroup or channel in the format @username
 	ChatId ChatId `json:"chat_id" structs:"chat_id,omitnested"`
@@ -1198,7 +1228,7 @@ type GetChatMemberRequest struct {
 	UserId int64 `json:"user_id" structs:"user_id,omitnested"`
 }
 
-// Use this method to get the last messages from the personal chat (i.e., the chat currently added to their profile) of a given user. On success, an array of Message objects is returned.
+// Use this method to get the last messages from the personal chat (i.e., the chat currently added to their profile) of a given user. On success, an Array of Message objects is returned.
 type GetUserPersonalChatMessagesRequest struct {
 	// Unique identifier for the target user
 	UserId int64 `json:"user_id" structs:"user_id,omitnested"`
@@ -1323,11 +1353,11 @@ type AnswerCallbackQueryRequest struct {
 	CallbackQueryId string `json:"callback_query_id" structs:"callback_query_id,omitnested"`
 	// Text of the notification. If not specified, nothing will be shown to the user, 0-200 characters.
 	Text *string `json:"text,omitempty" structs:"text,omitempty,omitnested"`
-	// If True, an alert will be shown by the client instead of a notification at the top of the chat screen. Defaults to false.
+	// If True, an alert will be shown by the client instead of a notification at the top of the chat screen. Defaults to False.
 	ShowAlert *bool `json:"show_alert,omitempty" structs:"show_alert,omitempty,omitnested"`
 	// URL that will be opened by the user's client. If you have created a Game and accepted the conditions via @BotFather, specify the URL that opens your game - note that this will only work if the query comes from a callback_game button. Otherwise, you may use links like t.me/your_bot?start=XXXX that open your bot with a parameter.
 	Url *string `json:"url,omitempty" structs:"url,omitempty,omitnested"`
-	// The maximum amount of time in seconds that the result of the callback query may be cached client-side. Telegram apps will support caching starting in version 3.14. Defaults to 0.
+	// The maximum amount of time in seconds that the result of the callback query may be cached client-side. Defaults to 0.
 	CacheTime *int64 `json:"cache_time,omitempty" structs:"cache_time,omitempty,omitnested"`
 }
 
@@ -1375,9 +1405,9 @@ type GetManagedBotAccessSettingsRequest struct {
 type SetManagedBotAccessSettingsRequest struct {
 	// User identifier of the managed bot whose access settings will be changed
 	UserId int64 `json:"user_id" structs:"user_id,omitnested"`
-	// Pass True, if only selected users can access the bot. The bot's owner can always access it.
+	// Pass True if only selected users can access the bot. The bot's owner can always access it.
 	IsAccessRestricted bool `json:"is_access_restricted" structs:"is_access_restricted,omitnested"`
-	// A JSON-serialized list of up to 10 identifiers of users who will have access to the bot in addition to its owner. Ignored if is_access_restricted is false.
+	// A JSON-serialized list of up to 10 identifiers of users who will have access to the bot in addition to its owner. Ignored if is_access_restricted is False.
 	AddedUserIds []int64 `json:"added_user_ids,omitempty" structs:"added_user_ids,omitempty,omitnested"`
 }
 
@@ -1617,7 +1647,7 @@ type RemoveBusinessAccountProfilePhotoRequest struct {
 type SetBusinessAccountGiftSettingsRequest struct {
 	// Unique identifier of the business connection
 	BusinessConnectionId string `json:"business_connection_id" structs:"business_connection_id,omitnested"`
-	// Pass True, if a button for sending a gift to the user or by the business account must always be shown in the input field
+	// Pass True if a button for sending a gift to the user or by the business account must always be shown in the input field
 	ShowGiftButton bool `json:"show_gift_button" structs:"show_gift_button,omitnested"`
 	// Types of gifts accepted by the business account
 	AcceptedGiftTypes AcceptedGiftTypes `json:"accepted_gift_types" structs:"accepted_gift_types,omitnested"`
@@ -1857,7 +1887,7 @@ type EditMessageTextRequest struct {
 	Entities []MessageEntity `json:"entities,omitempty" structs:"entities,omitempty,omitnested"`
 	// Link preview generation options for the message
 	LinkPreviewOptions *LinkPreviewOptions `json:"link_preview_options,omitempty" structs:"link_preview_options,omitempty,omitnested"`
-	// New rich content of the message; required if text isn't specified
+	// New rich content of the message; required if text isn't specified. Direct upload of new files and explicit upload of files by a URL isn't supported when an inline message is edited.
 	RichMessage *InputRichMessage `json:"rich_message,omitempty" structs:"rich_message,omitempty,omitnested"`
 	// A JSON-serialized object for an inline keyboard
 	ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty" structs:"reply_markup,omitempty,omitnested"`
@@ -1879,7 +1909,7 @@ type EditMessageCaptionRequest struct {
 	ParseMode *string `json:"parse_mode,omitempty" structs:"parse_mode,omitempty,omitnested"`
 	// A JSON-serialized list of special entities that appear in the caption, which can be specified instead of parse_mode
 	CaptionEntities []MessageEntity `json:"caption_entities,omitempty" structs:"caption_entities,omitempty,omitnested"`
-	// Pass True, if the caption must be shown above the message media. Supported only for animation, photo and video messages.
+	// Pass True if the caption must be shown above the message media. Supported only for animation, photo and video messages.
 	ShowCaptionAboveMedia *bool `json:"show_caption_above_media,omitempty" structs:"show_caption_above_media,omitempty,omitnested"`
 	// A JSON-serialized object for an inline keyboard
 	ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty" structs:"reply_markup,omitempty,omitnested"`
@@ -1895,7 +1925,7 @@ type EditMessageMediaRequest struct {
 	MessageId *int64 `json:"message_id,omitempty" structs:"message_id,omitempty,omitnested"`
 	// Required if chat_id and message_id are not specified. Identifier of the inline message.
 	InlineMessageId *string `json:"inline_message_id,omitempty" structs:"inline_message_id,omitempty,omitnested"`
-	// A JSON-serialized object for a new media content of the message
+	// A JSON-serialized object for the new media content of the message
 	Media InputMedia `json:"media" structs:"media,omitnested"`
 	// A JSON-serialized object for a new inline keyboard
 	ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty" structs:"reply_markup,omitempty,omitnested"`
@@ -1981,6 +2011,74 @@ type StopPollRequest struct {
 	ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty" structs:"reply_markup,omitempty,omitnested"`
 }
 
+// Use this method to edit an ephemeral text or rich message. Note that it is not guaranteed that the user will receive the message edit event, especially if they are offline. On success, True is returned.
+type EditEphemeralMessageTextRequest struct {
+	// Unique identifier for the target chat or username of the target supergroup in the format @username
+	ChatId ChatId `json:"chat_id" structs:"chat_id,omitnested"`
+	// Identifier of the user who received the message
+	ReceiverUserId int64 `json:"receiver_user_id" structs:"receiver_user_id,omitnested"`
+	// Identifier of the ephemeral message to edit
+	EphemeralMessageId int64 `json:"ephemeral_message_id" structs:"ephemeral_message_id,omitnested"`
+	// New text of the message, 1-4096 characters after entity parsing; required if rich_message isn't specified
+	Text *string `json:"text,omitempty" structs:"text,omitempty,omitnested"`
+	// Mode for parsing entities in the message text. See formatting options for more details.
+	ParseMode *string `json:"parse_mode,omitempty" structs:"parse_mode,omitempty,omitnested"`
+	// A JSON-serialized list of special entities that appear in message text, which can be specified instead of parse_mode
+	Entities []MessageEntity `json:"entities,omitempty" structs:"entities,omitempty,omitnested"`
+	// New rich content of the message; required if text isn't specified
+	RichMessage *InputRichMessage `json:"rich_message,omitempty" structs:"rich_message,omitempty,omitnested"`
+	// Link preview generation options for the message
+	LinkPreviewOptions *LinkPreviewOptions `json:"link_preview_options,omitempty" structs:"link_preview_options,omitempty,omitnested"`
+	// A JSON-serialized object for an inline keyboard
+	ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty" structs:"reply_markup,omitempty,omitnested"`
+}
+
+// Use this method to edit the media of an ephemeral message. Note that it is not guaranteed that the user will receive the message edit event, especially if they are offline. On success, True is returned.
+type EditEphemeralMessageMediaRequest struct {
+	// Unique identifier for the target chat or username of the target supergroup in the format @username
+	ChatId ChatId `json:"chat_id" structs:"chat_id,omitnested"`
+	// Identifier of the user who received the message
+	ReceiverUserId int64 `json:"receiver_user_id" structs:"receiver_user_id,omitnested"`
+	// Identifier of the ephemeral message to edit
+	EphemeralMessageId int64 `json:"ephemeral_message_id" structs:"ephemeral_message_id,omitnested"`
+	// A JSON-serialized object for the new media content of the message
+	Media InputMedia `json:"media" structs:"media,omitnested"`
+	// A JSON-serialized object for an inline keyboard
+	ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty" structs:"reply_markup,omitempty,omitnested"`
+}
+
+// Use this method to edit the caption of an ephemeral message. Note that it is not guaranteed that the user will receive the message edit event, especially if they are offline. On success, True is returned.
+type EditEphemeralMessageCaptionRequest struct {
+	// Unique identifier for the target chat or username of the target supergroup in the format @username
+	ChatId ChatId `json:"chat_id" structs:"chat_id,omitnested"`
+	// Identifier of the user who received the message
+	ReceiverUserId int64 `json:"receiver_user_id" structs:"receiver_user_id,omitnested"`
+	// Identifier of the ephemeral message to edit
+	EphemeralMessageId int64 `json:"ephemeral_message_id" structs:"ephemeral_message_id,omitnested"`
+	// New caption of the message, 0-1024 characters after entities parsing
+	Caption *string `json:"caption,omitempty" structs:"caption,omitempty,omitnested"`
+	// Mode for parsing entities in the message caption. See formatting options for more details.
+	ParseMode *string `json:"parse_mode,omitempty" structs:"parse_mode,omitempty,omitnested"`
+	// A JSON-serialized list of special entities that appear in the caption, which can be specified instead of parse_mode
+	CaptionEntities []MessageEntity `json:"caption_entities,omitempty" structs:"caption_entities,omitempty,omitnested"`
+	// Pass True if the caption must be shown above the message media. Supported only for animation, photo and video messages.
+	ShowCaptionAboveMedia *bool `json:"show_caption_above_media,omitempty" structs:"show_caption_above_media,omitempty,omitnested"`
+	// A JSON-serialized object for an inline keyboard
+	ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty" structs:"reply_markup,omitempty,omitnested"`
+}
+
+// Use this method to edit only the reply markup of an ephemeral message. Note that it is not guaranteed that the user will receive the message edit event, especially if they are offline. On success, True is returned.
+type EditEphemeralMessageReplyMarkupRequest struct {
+	// Unique identifier for the target chat or username of the target supergroup in the format @username
+	ChatId ChatId `json:"chat_id" structs:"chat_id,omitnested"`
+	// Identifier of the user who received the message
+	ReceiverUserId int64 `json:"receiver_user_id" structs:"receiver_user_id,omitnested"`
+	// Identifier of the ephemeral message to edit
+	EphemeralMessageId int64 `json:"ephemeral_message_id" structs:"ephemeral_message_id,omitnested"`
+	// A JSON-serialized object for an inline keyboard
+	ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty" structs:"reply_markup,omitempty,omitnested"`
+}
+
 // Use this method to approve a suggested post in a direct messages chat. The bot must have the 'can_post_messages' administrator right in the corresponding channel chat. Returns True on success.
 type ApproveSuggestedPostRequest struct {
 	// Unique identifier for the target direct messages chat
@@ -2027,6 +2125,16 @@ type DeleteMessagesRequest struct {
 	MessageIds []int64 `json:"message_ids" structs:"message_ids,omitnested"`
 }
 
+// Use this method to delete an ephemeral message. Note that it is not guaranteed that the user will receive the message deletion event, especially if they are offline. Returns True on success.
+type DeleteEphemeralMessageRequest struct {
+	// Unique identifier for the target chat or username of the target supergroup in the format @username
+	ChatId ChatId `json:"chat_id" structs:"chat_id,omitnested"`
+	// Identifier of the user who received the message
+	ReceiverUserId int64 `json:"receiver_user_id" structs:"receiver_user_id,omitnested"`
+	// Identifier of the ephemeral message to delete
+	EphemeralMessageId int64 `json:"ephemeral_message_id" structs:"ephemeral_message_id,omitnested"`
+}
+
 // Use this method to remove a reaction from a message in a group or a supergroup chat. The bot must have the 'can_delete_messages' administrator right in the chat. Returns True on success.
 type DeleteMessageReactionRequest struct {
 	// Unique identifier for the target chat or username of the target supergroup in the format @username
@@ -2059,6 +2167,8 @@ type SendStickerRequest struct {
 	MessageThreadId *int64 `json:"message_thread_id,omitempty" structs:"message_thread_id,omitempty,omitnested"`
 	// Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
 	DirectMessagesTopicId *int64 `json:"direct_messages_topic_id,omitempty" structs:"direct_messages_topic_id,omitempty,omitnested"`
+	// A JSON-serialized object containing the parameters of the ephemeral message to send
+	EphemeralMessageParameters *EphemeralMessageParameters `json:"ephemeral_message_parameters,omitempty" structs:"ephemeral_message_parameters,omitempty,omitnested"`
 	// Sticker to send. Pass a file_id as String to send a file that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a .WEBP sticker from the Internet, or upload a new .WEBP, .TGS, or .WEBM sticker using multipart/form-data. More information on Sending Files: https://core.telegram.org/bots/api#sending-files. Video and animated stickers can't be sent via an HTTP URL.
 	Sticker InputFile `json:"sticker" structs:"sticker,omitnested"`
 	// Emoji associated with the sticker; only for just uploaded stickers
@@ -2213,7 +2323,7 @@ type DeleteStickerSetRequest struct {
 
 // Use this method to send rich messages. If the message contains a block with a media element, then the bot must have the right to send the media to the chat. On success, the sent Message is returned.
 type SendRichMessageRequest struct {
-	// Unique identifier of the business connection on behalf of which the message will be sent
+	// Unique identifier of the business connection on behalf of which the message will be sent. Bot can send rich messages on behalf of a business account only if the corresponding user can send rich messages.
 	BusinessConnectionId *string `json:"business_connection_id,omitempty" structs:"business_connection_id,omitempty,omitnested"`
 	// Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
 	ChatId ChatId `json:"chat_id" structs:"chat_id,omitnested"`
@@ -2221,6 +2331,8 @@ type SendRichMessageRequest struct {
 	MessageThreadId *int64 `json:"message_thread_id,omitempty" structs:"message_thread_id,omitempty,omitnested"`
 	// Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
 	DirectMessagesTopicId *int64 `json:"direct_messages_topic_id,omitempty" structs:"direct_messages_topic_id,omitempty,omitnested"`
+	// A JSON-serialized object containing the parameters of the ephemeral message to send
+	EphemeralMessageParameters *EphemeralMessageParameters `json:"ephemeral_message_parameters,omitempty" structs:"ephemeral_message_parameters,omitempty,omitnested"`
 	// The message to be sent
 	RichMessage InputRichMessage `json:"rich_message" structs:"rich_message,omitnested"`
 	// Sends the message silently. Users will receive a notification with no sound.
@@ -2245,10 +2357,14 @@ type SendRichMessageDraftRequest struct {
 	ChatId int64 `json:"chat_id" structs:"chat_id,omitnested"`
 	// Unique identifier for the target message thread
 	MessageThreadId *int64 `json:"message_thread_id,omitempty" structs:"message_thread_id,omitempty,omitnested"`
-	// Unique identifier of the message draft; must be non-zero. Changes to drafts with the same identifier are animated.
+	// Unique identifier of the message draft; must be non-zero. Changes to drafts with the same identifier are animated. Otherwise, the draft is replaced without animation.
 	DraftId int64 `json:"draft_id" structs:"draft_id,omitnested"`
-	// The partial message to be streamed
+	// The partial message to be streamed. Direct upload of new files and explicit upload of files by a URL isn't supported.
 	RichMessage InputRichMessage `json:"rich_message" structs:"rich_message,omitnested"`
+	// Pass True to show the user a button to stop further drafts. The bot will receive an Update "stopped_message_generation" if the user presses the button.
+	CanStop *bool `json:"can_stop,omitempty" structs:"can_stop,omitempty,omitnested"`
+	// Pass True to keep the draft in the chat when the button is pressed. The draft will still disappear after a short time or if the bot sends a message. To fully preserve the partial draft, the bot should send it as a new message.
+	KeepOnStop *bool `json:"keep_on_stop,omitempty" structs:"keep_on_stop,omitempty,omitnested"`
 }
 
 // Use this method to send answers to an inline query. On success, True is returned.
@@ -2256,7 +2372,7 @@ type SendRichMessageDraftRequest struct {
 type AnswerInlineQueryRequest struct {
 	// Unique identifier for the answered query
 	InlineQueryId string `json:"inline_query_id" structs:"inline_query_id,omitnested"`
-	// A JSON-serialized array of results for the inline query
+	// A JSON-serialized Array of results for the inline query
 	Results []InlineQueryResult `json:"results" structs:"results,omitnested"`
 	// The maximum amount of time in seconds that the result of the inline query may be cached on the server. Defaults to 300.
 	CacheTime *int64 `json:"cache_time,omitempty" structs:"cache_time,omitempty,omitnested"`
@@ -2290,7 +2406,7 @@ type SendInvoiceRequest struct {
 	Prices []LabeledPrice `json:"prices" structs:"prices,omitnested"`
 	// The maximum accepted amount for tips in the smallest units of the currency (integer, not float/double). For example, for a maximum tip of US$ 1.45 pass max_tip_amount = 145. See the exp parameter in currencies.json, it shows the number of digits past the decimal point for each currency (2 for the majority of currencies). Defaults to 0. Not supported for payments in Telegram Stars.
 	MaxTipAmount *int64 `json:"max_tip_amount,omitempty" structs:"max_tip_amount,omitempty,omitnested"`
-	// A JSON-serialized array of suggested amounts of tips in the smallest units of the currency (integer, not float/double). At most 4 suggested tip amounts can be specified. The suggested tip amounts must be positive, passed in a strictly increased order and must not exceed max_tip_amount.
+	// A JSON-serialized Array of suggested amounts of tips in the smallest units of the currency (integer, not float/double). At most 4 suggested tip amounts can be specified. The suggested tip amounts must be positive, passed in a strictly increased order and must not exceed max_tip_amount.
 	SuggestedTipAmounts []int64 `json:"suggested_tip_amounts,omitempty" structs:"suggested_tip_amounts,omitempty,omitnested"`
 	// Unique deep-linking parameter. If left empty, forwarded copies of the sent message will have a Pay button, allowing multiple users to pay directly from the forwarded message, using the same invoice. If non-empty, forwarded copies of the sent message will have a URL button with a deep link to the bot (instead of a Pay button), with the value used as the start parameter.
 	StartParameter *string `json:"start_parameter,omitempty" structs:"start_parameter,omitempty,omitnested"`
@@ -2354,7 +2470,7 @@ type CreateInvoiceLinkRequest struct {
 	SubscriptionPeriod *int64 `json:"subscription_period,omitempty" structs:"subscription_period,omitempty,omitnested"`
 	// The maximum accepted amount for tips in the smallest units of the currency (integer, not float/double). For example, for a maximum tip of US$ 1.45 pass max_tip_amount = 145. See the exp parameter in currencies.json, it shows the number of digits past the decimal point for each currency (2 for the majority of currencies). Defaults to 0. Not supported for payments in Telegram Stars.
 	MaxTipAmount *int64 `json:"max_tip_amount,omitempty" structs:"max_tip_amount,omitempty,omitnested"`
-	// A JSON-serialized array of suggested amounts of tips in the smallest units of the currency (integer, not float/double). At most 4 suggested tip amounts can be specified. The suggested tip amounts must be positive, passed in a strictly increased order and must not exceed max_tip_amount.
+	// A JSON-serialized Array of suggested amounts of tips in the smallest units of the currency (integer, not float/double). At most 4 suggested tip amounts can be specified. The suggested tip amounts must be positive, passed in a strictly increased order and must not exceed max_tip_amount.
 	SuggestedTipAmounts []int64 `json:"suggested_tip_amounts,omitempty" structs:"suggested_tip_amounts,omitempty,omitnested"`
 	// JSON-serialized data about the invoice, which will be shared with the payment provider. A detailed description of required fields should be provided by the payment provider.
 	ProviderData *string `json:"provider_data,omitempty" structs:"provider_data,omitempty,omitnested"`
@@ -2388,7 +2504,7 @@ type AnswerShippingQueryRequest struct {
 	ShippingQueryId string `json:"shipping_query_id" structs:"shipping_query_id,omitnested"`
 	// Pass True if delivery to the specified address is possible and False if there are any problems (for example, if delivery to the specified address is not possible)
 	Ok bool `json:"ok" structs:"ok,omitnested"`
-	// Required if ok is True. A JSON-serialized array of available shipping options.
+	// Required if ok is True. A JSON-serialized Array of available shipping options.
 	ShippingOptions []ShippingOption `json:"shipping_options,omitempty" structs:"shipping_options,omitempty,omitnested"`
 	// Required if ok is False. Error message in human readable form that explains why it is impossible to complete the order (e.g. "Sorry, delivery to your desired address is unavailable"). Telegram will display this message to the user.
 	ErrorMessage *string `json:"error_message,omitempty" structs:"error_message,omitempty,omitnested"`
@@ -2438,7 +2554,7 @@ type EditUserStarSubscriptionRequest struct {
 type SetPassportDataErrorsRequest struct {
 	// User identifier
 	UserId int64 `json:"user_id" structs:"user_id,omitnested"`
-	// A JSON-serialized array describing the errors
+	// A JSON-serialized Array describing the errors
 	Errors []PassportElementError `json:"errors" structs:"errors,omitnested"`
 }
 

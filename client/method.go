@@ -206,7 +206,7 @@ func (client *Client) ForwardMessage(req *ForwardMessageRequest) (*Message, erro
 	return resp, nil
 }
 
-// Use this method to forward multiple messages of any kind. If some of the specified messages can't be found or forwarded, they are skipped. Service messages and messages with protected content can't be forwarded. Album grouping is kept for forwarded messages. On success, an array of MessageId of the sent messages is returned.
+// Use this method to forward multiple messages of any kind. If some of the specified messages can't be found or forwarded, they are skipped. Service messages and messages with protected content can't be forwarded. Album grouping is kept for forwarded messages. On success, an Array of MessageId of the sent messages is returned.
 func (client *Client) ForwardMessages(req *ForwardMessagesRequest) ([]MessageId, error) {
 	params := requestToMap(req)
 
@@ -229,7 +229,7 @@ func (client *Client) ForwardMessages(req *ForwardMessagesRequest) ([]MessageId,
 	return resp, nil
 }
 
-// Use this method to copy messages of any kind. Service messages, paid media messages, giveaway messages, giveaway winners messages, and invoice messages can't be copied. A quiz poll can be copied only if the value of the field correct_option_id is known to the bot. The method is analogous to the method forwardMessage, but the copied message doesn't have a link to the original message. Returns the MessageId of the sent message on success.
+// Use this method to copy messages of any kind. Service messages, paid media messages, giveaway messages, giveaway winners messages, and invoice messages can't be copied. A quiz poll can be copied only if the value of the field correct_option_ids is known to the bot. The method is analogous to the method forwardMessage, but the copied message doesn't have a link to the original message. Returns the MessageId of the sent message on success.
 func (client *Client) CopyMessage(req *CopyMessageRequest) (*MessageId, error) {
 	params := requestToMap(req)
 
@@ -252,7 +252,7 @@ func (client *Client) CopyMessage(req *CopyMessageRequest) (*MessageId, error) {
 	return resp, nil
 }
 
-// Use this method to copy messages of any kind. If some of the specified messages can't be found or copied, they are skipped. Service messages, paid media messages, giveaway messages, giveaway winners messages, and invoice messages can't be copied. A quiz poll can be copied only if the value of the field correct_option_id is known to the bot. The method is analogous to the method forwardMessages, but the copied messages don't have a link to the original message. Album grouping is kept for copied messages. On success, an array of MessageId of the sent messages is returned.
+// Use this method to copy messages of any kind. If some of the specified messages can't be found or copied, they are skipped. Service messages, paid media messages, giveaway messages, giveaway winners messages, and invoice messages can't be copied. A quiz poll can be copied only if the value of the field correct_option_ids is known to the bot. The method is analogous to the method forwardMessages, but the copied messages don't have a link to the original message. Album grouping is kept for copied messages. On success, an Array of MessageId of the sent messages is returned.
 func (client *Client) CopyMessages(req *CopyMessagesRequest) ([]MessageId, error) {
 	params := requestToMap(req)
 
@@ -437,7 +437,7 @@ func (client *Client) SendVoice(req *SendVoiceRequest) (*Message, error) {
 	return resp, nil
 }
 
-// As of v.4.0, Telegram clients support rounded square MPEG4 videos of up to 1 minute long. Use this method to send video messages. On success, the sent Message is returned.
+// Use this method to send a rounded square MPEG4 video of up to 1 minute long. On success, the sent Message is returned.
 func (client *Client) SendVideoNote(req *SendVideoNoteRequest) (*Message, error) {
 	params := requestToMap(req)
 
@@ -483,7 +483,7 @@ func (client *Client) SendPaidMedia(req *SendPaidMediaRequest) (*Message, error)
 	return resp, nil
 }
 
-// Use this method to send a group of photos, live photos, videos, documents or audios as an album. Documents and audio files can be only grouped in an album with messages of the same type. On success, an array of Message objects that were sent is returned.
+// Use this method to send a group of photos, live photos, videos, documents or audios as an album. Documents and audio files can be only grouped in an album with messages of the same type. On success, an Array of Message objects that were sent is returned.
 func (client *Client) SendMediaGroup(req *SendMediaGroupRequest) ([]Message, error) {
 	params := requestToMap(req)
 
@@ -1221,7 +1221,7 @@ func (client *Client) AnswerChatJoinRequestQuery(req *AnswerChatJoinRequestQuery
 	return resp, nil
 }
 
-// Use this method to process a received chat join request query by showing a Mini App to the user before deciding the outcome. Returns True on success.
+// Use this method to process a received chat join request query by showing a Mini App to the user before deciding the outcome. Call answerChatJoinRequestQuery to resolve the join request query based on the user interaction with the Mini App. Returns True on success.
 func (client *Client) SendChatJoinRequestWebApp(req *SendChatJoinRequestWebAppRequest) (bool, error) {
 	params := requestToMap(req)
 
@@ -1474,7 +1474,7 @@ func (client *Client) GetChatAdministrators(req *GetChatAdministratorsRequest) (
 	return resp, nil
 }
 
-// Use this method to get the number of members in a chat. Returns Int on success.
+// Use this method to get the number of members in a chat. Returns Integer on success.
 func (client *Client) GetChatMemberCount(req *GetChatMemberCountRequest) (int64, error) {
 	params := requestToMap(req)
 
@@ -1520,7 +1520,7 @@ func (client *Client) GetChatMember(req *GetChatMemberRequest) (*ChatMember, err
 	return resp, nil
 }
 
-// Use this method to get the last messages from the personal chat (i.e., the chat currently added to their profile) of a given user. On success, an array of Message objects is returned.
+// Use this method to get the last messages from the personal chat (i.e., the chat currently added to their profile) of a given user. On success, an Array of Message objects is returned.
 func (client *Client) GetUserPersonalChatMessages(req *GetUserPersonalChatMessagesRequest) ([]Message, error) {
 	params := requestToMap(req)
 
@@ -3288,6 +3288,98 @@ func (client *Client) StopPoll(req *StopPollRequest) (*Poll, error) {
 	return resp, nil
 }
 
+// Use this method to edit an ephemeral text or rich message. Note that it is not guaranteed that the user will receive the message edit event, especially if they are offline. On success, True is returned.
+func (client *Client) EditEphemeralMessageText(req *EditEphemeralMessageTextRequest) (bool, error) {
+	params := requestToMap(req)
+
+	apiResp, err := client.Request("editEphemeralMessageText", params)
+	if err != nil {
+		return false, err
+	}
+
+	if !apiResp.Ok {
+		return false, newError(apiResp)
+	}
+
+	var resp bool
+
+	err = json.Unmarshal(apiResp.Result, &resp)
+	if err != nil {
+		return false, err
+	}
+
+	return resp, nil
+}
+
+// Use this method to edit the media of an ephemeral message. Note that it is not guaranteed that the user will receive the message edit event, especially if they are offline. On success, True is returned.
+func (client *Client) EditEphemeralMessageMedia(req *EditEphemeralMessageMediaRequest) (bool, error) {
+	params := requestToMap(req)
+
+	apiResp, err := client.Request("editEphemeralMessageMedia", params)
+	if err != nil {
+		return false, err
+	}
+
+	if !apiResp.Ok {
+		return false, newError(apiResp)
+	}
+
+	var resp bool
+
+	err = json.Unmarshal(apiResp.Result, &resp)
+	if err != nil {
+		return false, err
+	}
+
+	return resp, nil
+}
+
+// Use this method to edit the caption of an ephemeral message. Note that it is not guaranteed that the user will receive the message edit event, especially if they are offline. On success, True is returned.
+func (client *Client) EditEphemeralMessageCaption(req *EditEphemeralMessageCaptionRequest) (bool, error) {
+	params := requestToMap(req)
+
+	apiResp, err := client.Request("editEphemeralMessageCaption", params)
+	if err != nil {
+		return false, err
+	}
+
+	if !apiResp.Ok {
+		return false, newError(apiResp)
+	}
+
+	var resp bool
+
+	err = json.Unmarshal(apiResp.Result, &resp)
+	if err != nil {
+		return false, err
+	}
+
+	return resp, nil
+}
+
+// Use this method to edit only the reply markup of an ephemeral message. Note that it is not guaranteed that the user will receive the message edit event, especially if they are offline. On success, True is returned.
+func (client *Client) EditEphemeralMessageReplyMarkup(req *EditEphemeralMessageReplyMarkupRequest) (bool, error) {
+	params := requestToMap(req)
+
+	apiResp, err := client.Request("editEphemeralMessageReplyMarkup", params)
+	if err != nil {
+		return false, err
+	}
+
+	if !apiResp.Ok {
+		return false, newError(apiResp)
+	}
+
+	var resp bool
+
+	err = json.Unmarshal(apiResp.Result, &resp)
+	if err != nil {
+		return false, err
+	}
+
+	return resp, nil
+}
+
 // Use this method to approve a suggested post in a direct messages chat. The bot must have the 'can_post_messages' administrator right in the corresponding channel chat. Returns True on success.
 func (client *Client) ApproveSuggestedPost(req *ApproveSuggestedPostRequest) (bool, error) {
 	params := requestToMap(req)
@@ -3372,6 +3464,29 @@ func (client *Client) DeleteMessages(req *DeleteMessagesRequest) (bool, error) {
 	params := requestToMap(req)
 
 	apiResp, err := client.Request("deleteMessages", params)
+	if err != nil {
+		return false, err
+	}
+
+	if !apiResp.Ok {
+		return false, newError(apiResp)
+	}
+
+	var resp bool
+
+	err = json.Unmarshal(apiResp.Result, &resp)
+	if err != nil {
+		return false, err
+	}
+
+	return resp, nil
+}
+
+// Use this method to delete an ephemeral message. Note that it is not guaranteed that the user will receive the message deletion event, especially if they are offline. Returns True on success.
+func (client *Client) DeleteEphemeralMessage(req *DeleteEphemeralMessageRequest) (bool, error) {
+	params := requestToMap(req)
+
+	apiResp, err := client.Request("deleteEphemeralMessage", params)
 	if err != nil {
 		return false, err
 	}
