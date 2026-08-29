@@ -17,7 +17,7 @@ func TestEscapeHTML(t *testing.T) {
 		{"less than", "1 < 2", "1 &lt; 2"},
 		{"greater than", "2 > 1", "2 &gt; 1"},
 		{"all specials", "<b>a & b</b>", "&lt;b&gt;a &amp; b&lt;/b&gt;"},
-		{"quotes untouched", `he said "hi"`, `he said "hi"`},
+		{"quotes", `he said "hi"`, `he said &quot;hi&quot;`},
 		{"apostrophe untouched", "it's fine", "it's fine"},
 		{"already escaped entity", "&amp;", "&amp;amp;"},
 		{"repeated specials", "<<>>&&", "&lt;&lt;&gt;&gt;&amp;&amp;"},

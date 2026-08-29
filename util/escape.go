@@ -22,6 +22,7 @@ var htmlReplacer = strings.NewReplacer(
 	"<", "&lt;",
 	">", "&gt;",
 	"&", "&amp;",
+	"\"", "&quot;",
 )
 
 func EscapeHtml(s string) string {
